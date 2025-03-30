@@ -1,0 +1,71 @@
+.non-essential-expenditure {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .non-essential-expenditure {
+    flex-direction: row;
+    align-items: flex-start; /* Align items to the top */
+    height: 400px; /* Fixed height for the container */
+  }
+  
+  .chart-container,
+  .info-box {
+    height: 400px; /* Fixed identical height */
+    margin: 0; /* Remove any margins */
+    box-sizing: border-box; /* Include padding in height calculation */
+    overflow-y: auto; /* Add scrolling if content overflows */
+  }
+}
+
+.chart-container {
+  flex: 3;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  position: relative; /* For positioning the ResponsiveContainer */
+}
+
+.info-box {
+  flex: 2;
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  border-left: 4px solid #FF8042;
+}
+
+/* Make the ResponsiveContainer position absolute to fill the chart container */
+.chart-container .recharts-responsive-container {
+  position: absolute;
+  top: 15px; /* Match top padding */
+  left: 15px; /* Match left padding */
+  right: 15px; /* Match right padding */
+  bottom: 15px; /* Match bottom padding */
+  width: auto !important; /* Override inline width */
+  height: auto !important; /* Override inline height */
+}
+
+.info-box h3 {
+  color: #333;
+  margin-top: 0; /* Remove any top margin */
+  margin-bottom: 10px;
+}
+
+.info-box ul {
+  padding-left: 20px;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.info-box li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.note {
+  font-style: italic;
+  color: #666;
+  margin-top: 10px;
+}

@@ -1,0 +1,81 @@
+.food-expenditure-details {
+  margin-bottom: 30px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.controls button {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.controls button:hover {
+  background-color: #e0e0e0;
+}
+
+.controls button.active {
+  background-color: #8884d8;
+  color: white;
+  border-color: #8884d8;
+}
+
+.expenditure-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .expenditure-breakdown {
+    flex-direction: row;
+  }
+  
+  .chart-container {
+    flex: 3;
+  }
+  
+  .info-container {
+    flex: 2;
+  }
+}
+
+.chart-container {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.info-container {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  border-left: 4px solid #8884d8;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.info-container h3 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.info-container ul {
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+
+.info-container li {
+  margin-bottom: 8px;
+  line-height: 1.4;
+}

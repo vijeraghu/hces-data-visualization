@@ -1,0 +1,71 @@
+
+.india-map-container {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.map-legend {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-width: 180px;
+}
+
+.map-legend h3 {
+  font-size: 14px;
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.legend-items {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.legend-color-box {
+  width: 15px;
+  height: 15px;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+}
+
+.map-note {
+  font-size: 12px;
+  color: #666;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.tooltip-content {
+  max-width: 250px;
+}
+
+.tooltip-content h3 {
+  margin: 0 0 5px 0;
+  font-size: 16px;
+}
+
+.tooltip-content p {
+  margin: 3px 0;
+  font-size: 14px;
+}
+
+/* State selection style */
+.selected-state {
+  stroke: #E42 !important;
+  stroke-width: 1.5px !important;
+}

@@ -1,0 +1,17 @@
+# Node.js dependencies
+node_modules/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Distribution files
+build/
+dist/
+
+# Environment variables
+.env
+.env.local
+
+# Large data files
+data/hces_data.csv

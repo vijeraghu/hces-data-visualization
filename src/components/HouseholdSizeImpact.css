@@ -1,0 +1,28 @@
+/* src/components/HouseholdSizeImpact.css */
+.household-size-impact {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .chart-container {
+    margin-bottom: 20px;
+  }
+  
+  .insights {
+    background-color: #f5f9ff;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #0088FE;
+  }
+  
+  .insights ul {
+    padding-left: 20px;
+  }
+  
+  .insights li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }

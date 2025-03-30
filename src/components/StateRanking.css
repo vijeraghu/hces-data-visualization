@@ -1,0 +1,89 @@
+/* src/components/StateRanking.css */
+.state-ranking {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.ranking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .ranking-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ranking-card {
+  background-color: #f9f9fa;
+  border-radius: 8px;
+  padding: this 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s;
+}
+
+.ranking-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.ranking-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #333;
+}
+
+.top-states h3 {
+  color: #0066CC;
+  border-bottom: 2px solid #0088FE;
+  padding-bottom: 8px;
+}
+
+.bottom-states h3 {
+  color: #CC5500;
+  border-bottom: 2px solid #FF8042;
+  padding-bottom: 8px;
+}
+
+.chart-container {
+  margin-bottom: 10px;
+}
+
+.ranking-note {
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  padding: 0 10px;
+}
+
+.spending-gap {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.gap-highlight {
+  background: linear-gradient(135deg, #0088FE, #FF8042);
+  color: white;
+  border-radius: 30px;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.gap-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.gap-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
