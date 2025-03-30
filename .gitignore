@@ -14,4 +14,4 @@ dist/
 .env.local
 
 # Large data files
-data/hces_data.csv
+data/hces_data.csvdata/hces_data_standardized.csv
