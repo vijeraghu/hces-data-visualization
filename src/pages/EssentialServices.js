@@ -121,17 +121,17 @@ useEffect(() => {
         <div className="stat-card">
           <h3>Electricity Access</h3>
           <div className="stat-value">{Math.round(data.servicesBySector.find(item => item.sector === 'Rural')?.electricity_access_rate * 100 + data.servicesBySector.find(item => item.sector === 'Urban')?.electricity_access_rate * 100) / 2}%</div>
-          <p>national average</p>
+          <p>average</p>
         </div>
         <div className="stat-card">
           <h3>Piped Water Access</h3>
           <div className="stat-value">{Math.round(data.servicesBySector.find(item => item.sector === 'Rural')?.piped_water_access_rate * 100 + data.servicesBySector.find(item => item.sector === 'Urban')?.piped_water_access_rate * 100) / 2}%</div>
-          <p>national average</p>
+          <p>average</p>
         </div>
         <div className="stat-card">
           <h3>Toilet Access</h3>
           <div className="stat-value">{Math.round(data.servicesBySector.find(item => item.sector === 'Rural')?.toilet_access_rate * 100 + data.servicesBySector.find(item => item.sector === 'Urban')?.toilet_access_rate * 100) / 2}%</div>
-          <p>national average</p>
+          <p>average</p>
         </div>
       </div>
 

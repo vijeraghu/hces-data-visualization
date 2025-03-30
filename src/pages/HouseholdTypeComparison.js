@@ -1,8 +1,7 @@
 // File: src/pages/HouseholdTypeComparison.js
 import React, { useState, useEffect } from 'react';
 import { 
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-  PieChart, Pie, Cell, LineChart, Line, ScatterChart, Scatter, ZAxis
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import LoadingSpinner from '../components/LoadingSpinner';
 import './HouseholdTypeComparison.css';
@@ -12,6 +11,7 @@ function HouseholdTypeComparison() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedView, setSelectedView] = useState('expenditure');
+  const [selectedAsset, setSelectedAsset] = useState('tv');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,14 +39,11 @@ function HouseholdTypeComparison() {
   if (error) return <div className="error-message">Error: {error}</div>;
   if (!data) return <div className="error-message">No data available</div>;
 
-  // Colors for charts
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
-
-  // Define household type explanations for the legend
+  // Define household type explanations for the info boxes
   const householdTypeExplanations = {
     'Self-employment (Agriculture)': 'Households whose primary income source is from agricultural activities they operate themselves.',
     'Self-employment (Non-Agriculture)': 'Households whose primary income comes from non-agricultural businesses they own or operate.',
-    'Regular Wage/Salary': 'Households with members employed in regular jobs with steady salaries.',
+    'Regular wage/salary': 'Households with members employed in regular jobs with steady salaries.',
     'Casual Labour (Agriculture)': 'Households dependent on daily/seasonal agricultural labor without permanent employment.',
     'Casual Labour (Non-Agriculture)': 'Households dependent on daily/casual labor in non-agricultural sectors.',
     'Others': 'Households with income from sources like pensions, remittances, or other miscellaneous sources.'
@@ -70,18 +67,36 @@ function HouseholdTypeComparison() {
     value: item.food_pct
   }));
 
-  // Prepare data for asset ownership chart
-  const assetTypeMap = {
-    'tv': 'TV',
-    'fridge': 'Refrigerator',
-    'washingmachine': 'Washing Machine',
-    'ac': 'AC',
-    'computer': 'Computer',
-    'internet': 'Internet',
-    'mobile': 'Mobile Phone',
-    'bike': 'Two-Wheeler',
-    'car': 'Car'
+  // Prepare asset ownership data
+  const prepareAssetData = () => {
+    // Get unique household types
+    const householdTypes = [...new Set(data.assetOwnershipByType.map(item => item.hh_type))];
+    
+    // Get unique assets
+    const assets = [...new Set(data.assetOwnershipByType.map(item => item.asset))];
+    
+    // Create formatted asset options for selection
+    const assetOptions = assets.map(asset => ({
+      value: asset,
+      label: asset.charAt(0).toUpperCase() + asset.slice(1)
+    }));
+    
+    // Create data for the selected asset
+    const assetData = householdTypes.map(type => {
+      const assetItem = data.assetOwnershipByType.find(
+        item => item.hh_type === type && item.asset === selectedAsset
+      );
+      
+      return {
+        hh_type: type,
+        ownership_rate: assetItem ? assetItem.ownership_rate * 100 : 0
+      };
+    });
+    
+    return { assetOptions, assetData };
   };
+
+  const { assetOptions, assetData } = prepareAssetData();
 
   return (
     <div className="household-type-comparison">
@@ -134,34 +149,14 @@ function HouseholdTypeComparison() {
                 margin={{ top: 20, right: 30, left: 40, bottom: 100 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="type"
+                <XAxis 
+                  dataKey="type" 
+                  angle={-45} 
+                  textAnchor="end"
                   height={100}
                   interval={0}
-                  tick={(props) => {
-                    const { x, y, payload } = props;
-                    const words = payload.value.split(" "); // Splits label into words
-                    return (
-                      <g transform={`translate(${x},${y})`}>
-                        {words.map((word, index) => (
-                          <text
-                            key={index}
-                            x={0}
-                            y={index * 12} // Adjust vertical spacing
-                            dy={10}
-                            textAnchor="middle" // Centers text
-                            fontSize={12}
-                          >
-                            {word}
-                          </text>
-                        ))}
-                      </g>
-                    );
-                  }}
                 />
-
-
-                <YAxis label={{ value: 'Monthly Expenditure (₹)', angle: -90, position: 'Left' , dx :-30}} />
+                <YAxis label={{ value: 'Monthly Expenditure (₹)', angle: -90, position: 'Left', dx: -10 }} />
                 <Tooltip 
                   formatter={(value) => `₹${Math.round(value).toLocaleString()}`}
                   content={({ active, payload, label }) => {
@@ -171,7 +166,7 @@ function HouseholdTypeComparison() {
                           <p className="tooltip-label"><strong>{label}</strong></p>
                           <p className="tooltip-desc">{getHouseholdTypeExplanation(label)}</p>
                           <p className="tooltip-value">Average Expenditure: ₹{Math.round(payload[0].value).toLocaleString()}</p>
-                          <p className="tooltip-sample">Sample Size: {expenditureData.find(item => item.type === label).count.toLocaleString()} households</p>
+                          <p className="tooltip-sample">Sample Size: {expenditureData.find(item => item.type === label)?.count.toLocaleString() || 'N/A'} households</p>
                         </div>
                       );
                     }
@@ -206,34 +201,15 @@ function HouseholdTypeComparison() {
                 margin={{ top: 20, right: 30, left: 40, bottom: 100 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="type"
+                <XAxis 
+                  dataKey="type" 
+                  angle={-45} 
+                  textAnchor="end"
                   height={100}
                   interval={0}
-                  tick={(props) => {
-                    const { x, y, payload } = props;
-                    const words = payload.value.split(" "); // Splits label into words
-                    return (
-                      <g transform={`translate(${x},${y})`}>
-                        {words.map((word, index) => (
-                          <text
-                            key={index}
-                            x={0}
-                            y={index * 12} // Adjust vertical spacing
-                            dy={10}
-                            textAnchor="middle" // Centers text
-                            fontSize={12}
-                          >
-                            {word}
-                          </text>
-                        ))}
-                      </g>
-                    );
-                  }}
                 />
-
                 <YAxis 
-                  label={{ value: 'Food Expenditure (%)', angle: -90, position: 'Left' , dx:-10}} 
+                  label={{ value: 'Food Expenditure (%)', angle: -90, position: 'Left' , dx: -10}} 
                   domain={[0, 100]}
                 />
                 <Tooltip 
@@ -271,42 +247,62 @@ function HouseholdTypeComparison() {
       {/* Asset Ownership View */}
       {selectedView === 'assets' && (
         <section className="comparison-section">
-        <h2>Asset Ownership by Household Type</h2>
-        <div className="chart-container">
-          {/* Alternative implementation using separate charts for each asset */}
-          {Array.from(new Set(data.assetOwnershipByType.map(item => item.asset))).map(asset => (
-            <div key={asset} className="asset-chart">
-              <h3>Asset: {asset}</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart
-                  data={data.assetOwnershipByType
-                    .filter(item => item.asset === asset)
-                    .map(item => ({
-                      ...item,
-                      ownership_rate: item.ownership_rate * 100 // Convert to percentage
-                    }))}
-                  margin={{ top: 10, right: 30, left: 20, bottom: 10 }}
+          <h2>Asset Ownership by Household Type</h2>
+          
+          <div className="asset-selector">
+            <p>Select an asset to view ownership rates:</p>
+            <div className="asset-buttons">
+              {assetOptions.map(option => (
+                <button
+                  key={option.value}
+                  className={selectedAsset === option.value ? 'active' : ''}
+                  onClick={() => setSelectedAsset(option.value)}
                 >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="hh_type" />
-                  <YAxis domain={[0, 100]} label={{ value: '%', position: 'insideLeft' }} />
-                  <Tooltip formatter={(value) => `${value.toFixed(1)}%`} />
-                  <Bar dataKey="ownership_rate" fill="#0088FE" />
-                </BarChart>
-              </ResponsiveContainer>
+                  {option.label}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="info-box">
-          <h3>Asset Ownership Patterns</h3>
-          <ul>
-            <li>Regular wage/salary households have the highest ownership rates for most assets.</li>
-            <li>Mobile phones have the highest penetration across all household types.</li>
-            <li>Luxury items like ACs and cars show the widest ownership gap between household types.</li>
-            <li>Asset ownership directly correlates with expenditure capacity and economic stability.</li>
-          </ul>
-        </div>
-      </section>
+          </div>
+          
+          <div className="chart-container">
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart
+                data={assetData}
+                margin={{ top: 20, right: 30, left: 40, bottom: 100 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="hh_type" 
+                  angle={-45} 
+                  textAnchor="end"
+                  height={100}
+                  interval={0}
+                />
+                <YAxis 
+                  label={{ value: 'Ownership Rate (%)', angle: -90, position: 'Left', dx: -10 }} 
+                  domain={[0, 100]}
+                />
+                <Tooltip formatter={(value) => `${value.toFixed(1)}%`} />
+                <Legend verticalAlign='top'/>
+                <Bar 
+                  dataKey="ownership_rate" 
+                  name={`${selectedAsset.charAt(0).toUpperCase() + selectedAsset.slice(1)} Ownership`} 
+                  fill="#0088FE" 
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          
+          <div className="info-box">
+            <h3>Asset Ownership Patterns</h3>
+            <ul>
+              <li>Regular wage/salary households have the highest ownership rates for most assets.</li>
+              <li>Mobile phones have the highest penetration across all household types.</li>
+              <li>Luxury items like ACs and cars show the widest ownership gap between household types.</li>
+              <li>Asset ownership directly correlates with expenditure capacity and economic stability.</li>
+            </ul>
+          </div>
+        </section>
       )}
 
       {/* Education View */}
@@ -320,34 +316,15 @@ function HouseholdTypeComparison() {
                 margin={{ top: 20, right: 30, left: 40, bottom: 100 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                dataKey="hh_type"
-                height={100}
-                interval={0}
-                tick={(props) => {
-                  const { x, y, payload } = props;
-                  const words = payload.value.split(" "); // Splits label into words
-                  return (
-                    <g transform={`translate(${x},${y})`}>
-                      {words.map((word, index) => (
-                        <text
-                          key={index}
-                          x={0}
-                          y={index * 12} // Adjust vertical spacing
-                          dy={10}
-                          textAnchor="middle" // Centers text
-                          fontSize={12}
-                        >
-                          {word}
-                        </text>
-                      ))}
-                    </g>
-                  );
-                }}
-              />
-
+                <XAxis 
+                  dataKey="hh_type" 
+                  angle={-45} 
+                  textAnchor="end"
+                  height={100}
+                  interval={0}
+                />
                 <YAxis 
-                  label={{ value: 'Average Education (Years)', angle: -90, position: 'Left', dx :-10 }} 
+                  label={{ value: 'Average Education (Years)', angle: -90, position: 'Left', dx: -10 }} 
                   domain={[0, 15]}
                 />
                 <Tooltip 
@@ -365,7 +342,7 @@ function HouseholdTypeComparison() {
                     return null;
                   }}
                 />
-                <Legend verticalAlign='top'/>
+                <Legend verticalAlign='top' />
                 <Bar dataKey="avg_education_years" name="Average Education Years" fill="#8884d8" />
               </BarChart>
             </ResponsiveContainer>
@@ -394,32 +371,13 @@ function HouseholdTypeComparison() {
                 margin={{ top: 20, right: 30, left: 40, bottom: 100 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="hh_type"
+                <XAxis 
+                  dataKey="hh_type" 
+                  angle={-45} 
+                  textAnchor="end"
                   height={100}
                   interval={0}
-                  tick={(props) => {
-                    const { x, y, payload } = props;
-                    const words = payload.value.split(" "); // Splits label into words
-                    return (
-                      <g transform={`translate(${x},${y})`}>
-                        {words.map((word, index) => (
-                          <text
-                            key={index}
-                            x={0}
-                            y={index * 12} // Adjust vertical spacing
-                            dy={10}
-                            textAnchor="middle" // Centers text
-                            fontSize={12}
-                          >
-                            {word}
-                          </text>
-                        ))}
-                      </g>
-                    );
-                  }}
                 />
-
                 <YAxis 
                   yAxisId="left"
                   label={{ value: 'Monthly Value (₹)', angle: -90, position: 'Left', dx: -10 }} 
@@ -427,7 +385,7 @@ function HouseholdTypeComparison() {
                 <YAxis 
                   yAxisId="right"
                   orientation="right"
-                  label={{ value: 'Percentage (%)', angle: 90, position: 'Right', dx:10 }} 
+                  label={{ value: 'Percentage (%)', angle: 90, position: 'insideRight' }} 
                   domain={[0, 10]}
                 />
                 <Tooltip 
@@ -500,5 +458,3 @@ function HouseholdTypeComparison() {
 }
 
 export default HouseholdTypeComparison;
-
-/* CSS for the Household Type Comparison page */
