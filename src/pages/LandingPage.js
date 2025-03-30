@@ -66,7 +66,7 @@ function LandingPage() {
       
       <div className="header-section">
         <h1>Household Consumer Expenditure in India</h1>
-        <p className="subtitle">Insights from the Household Consumer Expenditure Survey (HCES), 2022</p>
+        <p className="subtitle">Insights from the Household Consumer Expenditure Survey (HCES), 2022-23</p>
         <StateSelector 
           selectedState={selectedState} 
           onStateChange={handleStateChange} 
